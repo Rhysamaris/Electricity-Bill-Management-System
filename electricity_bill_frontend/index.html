@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoltCare | Electricity Billing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div><h1>⚡ VoltCare</h1><p>Electricity Bill Management System</p></div>
+    <span id="api-status" class="status">Connecting to database…</span>
+  </header>
+  <main>
+    <section class="stats">
+      <article><span>Total consumers</span><strong id="stat-consumers">0</strong></article>
+      <article><span>Active connections</span><strong id="stat-connections">0</strong></article>
+      <article><span>Bills generated</span><strong id="stat-bills">0</strong></article>
+      <article><span>Pending bills</span><strong id="stat-pending">0</strong></article>
+    </section>
+
+    <section class="panel">
+      <h2>Register consumer</h2>
+      <form id="consumer-form" class="form-grid">
+        <label>Full name<input name="Name" required maxlength="100"></label>
+        <label>Phone<input name="Phone" required maxlength="20"></label>
+        <label>Email<input name="Email" type="email" required maxlength="120"></label>
+        <label>Address<input name="Address" required maxlength="255"></label>
+        <button type="submit">Save consumer</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Register connection</h2>
+      <form id="connection-form" class="form-grid">
+        <label>Consumer<select name="Consumer_ID" id="connection-consumer" required></select></label>
+        <label>Connection type<select name="Connection_Type">
+          <option value="Domestic">Domestic</option>
+          <option value="Commercial">Commercial</option>
+          <option value="Industrial">Industrial</option>
+        </select></label>
+        <label>Meter number<input name="Meter_No" required maxlength="50"></label>
+        <label>Status<select name="Status">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select></label>
+        <button type="submit">Save connection</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Record meter reading</h2>
+      <form id="usage-form" class="form-grid">
+        <label>Connection<select name="Connection_ID" id="usage-connection" required></select></label>
+        <label>Reading date<input name="Read_Date" type="date" required></label>
+        <label>Units consumed (kWh)<input name="Units_Consumed" type="number" min="0" step="0.01" required></label>
+        <button type="submit">Save reading</button>
+      </form>
+      <p class="hint">For this demo, the value entered is the units consumed during the billing period.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Generate bill</h2>
+      <form id="bill-form" class="form-grid">
+        <label>Usage record<select name="Record_ID" id="bill-record" required></select></label>
+        <label>Bill date<input name="Bill_Date" type="date" required></label>
+        <label>Due date<input name="Due_Date" type="date" required></label>
+        <label>Subsidy (₹)<input name="Subsidy" type="number" min="0" step="0.01" value="0" required></label>
+        <button type="submit">Calculate & generate bill</button>
+      </form>
+      <p class="hint">The backend calculates the slab charges. Do not enter the final bill amount manually.</p>
+    </section>
+
+    <section class="panel">
+      <div class="heading-row"><h2>Consumers</h2><button class="secondary" id="refresh">Refresh data</button></div>
+      <div class="table-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th></tr></thead><tbody id="consumers"></tbody></table></div>
+    </section>
+    <section class="panel">
+      <h2>Connections</h2>
+      <div class="table-wrap"><table><thead><tr><th>ID</th><th>Consumer</th><th>Type</th><th>Meter</th><th>Status</th></tr></thead><tbody id="connections"></tbody></table></div>
+    </section>
+    <section class="panel">
+      <h2>Usage records</h2>
+      <div class="table-wrap"><table><thead><tr><th>Record ID</th><th>Consumer</th><th>Meter</th><th>Date</th><th>Units</th></tr></thead><tbody id="usage"></tbody></table></div>
+    </section>
+    <section class="panel">
+      <h2>Bills & payments</h2>
+      <div class="table-wrap"><table><thead><tr><th>Bill ID</th><th>Consumer</th><th>Units</th><th>Energy charge</th><th>Subsidy</th><th>Final amount</th><th>Due date</th><th>Status</th><th>Action</th></tr></thead><tbody id="bills"></tbody></table></div>
+    </section>
+    <section class="panel">
+      <h2>Automatic slab breakdown</h2>
+      <p class="hint">Each row is stored in MySQL and linked to its bill.</p>
+      <div class="table-wrap"><table><thead><tr><th>Breakdown ID</th><th>Bill ID</th><th>Slab range</th><th>Units in slab</th><th>Rate / unit</th><th>Slab amount</th></tr></thead><tbody id="slabs"></tbody></table></div>
+    </section>
+    <p id="message" role="status"></p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
